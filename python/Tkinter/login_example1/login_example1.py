@@ -20,6 +20,7 @@ entry_usr_name = tk.Entry(window, textvariable=var_usr_name)
 entry_usr_name.place(x=160,y=150)
 var_usr_pwd    = tk.StringVar()
 entry_usr_pwd  = tk.Entry(window,textvariable=var_usr_pwd, show='*') 
+entry_usr_pwd.place(x=160,y=190)
 
 # 触发功能
 def usr_login():
