@@ -1,0 +1,5 @@
+question1: 使用python运行*.py文件时，提示
+           "SyntaxError: Non-ASCII character '\xe6' in file..."
+answer1: 在*.py文件的最开始，加入下面这行代码
+# -*- coding: utf-8 -*-
+
