@@ -31,6 +31,7 @@ print(df.loc[:,'A':'B'])
 
 # 根据标签loc选择指定行，某些列
 print(df.loc['20190423','A':'B'])
+print(df.loc['20190423',['A','C']])
 
 # 根据标签loc选择某些行，某些列
 print(df.loc['20190423':'20190424','A':'B'])
@@ -43,5 +44,14 @@ print(df.iloc[:,1])
 
 # 根据序列号iloc，选择多行，指定列
 print(df.iloc[[1,2],1])
+
+# 根据序列号iloc，选择全部行，指定多列
+print(df.iloc[:,[1,2]])
+
+# 根据序列号iloc，选择多行，指定多列
+print(df.iloc[[1,2],[1,2]])
+
+# 通过判断的筛选
+print(df[df.A>8])
 
 
