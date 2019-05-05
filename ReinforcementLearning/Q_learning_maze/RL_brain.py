@@ -1,51 +1,64 @@
-"""
-This part of code is the Q learning brain, which is a brain of the agent.
-All decisions are made in here.
+'''
+====== Q_Learning强化学习者的大脑 =======
 
-View more on my tutorial page: https://morvanzhou.github.io/tutorials/
-"""
+Q_LearningTable:
+           action[0]   action[1]   ...  action[j] ...   action[n]
+state_0       Q00          Q01             Q0j            Q0n
+state_1       Q10          Q11             Q1j            Q1n
+...
+state_i       Qi0          Qi1             Qij            Qin
+...
+state_m       Qm0          Qm1             Qmj            Qmn
 
-import numpy as np
+在state下选择一个动作action的策略：
+	以epsilon的概率选择Q值最大的action，
+    以（1-epsilon)的概率随机选择Q值
+新的Q值 = 旧Q值 + 
+		  奖励值reward（采取当前action获得的） + 
+		  在状态state_下最大的Q值（采取当前action后到达的新状态下的最大Q值）
+最佳action[j] ： 
+	Q值最大
+'''
+
+
 import pandas as pd
+import numpy  as np
 
+class Q_LearningTable:
+	def __init__(self, actions, learning_rate=0.1, reward_decay=0.9, e_greedy=0.9):
+		self.actions = actions # a list	
+		self.lr      = learning_rate
+		self.gamma   = reward_decay
+		self.epsilon = e_greedy
+		self.q_table = pd.DataFrame(columns=actions, dtype=np.float64)
 
-class QLearningTable:
-    def __init__(self, actions, learning_rate=0.01, reward_decay=0.9, e_greedy=0.9):
-        self.actions = actions  # a list
-        self.lr = learning_rate
-        self.gamma = reward_decay
-        self.epsilon = e_greedy
-        self.q_table = pd.DataFrame(columns=self.actions, dtype=np.float64)
+	def choose_action(self,state):
+		self.check_state_exist(state)	
+		if np.random.uniform() < self.epsilon:
+			state_action = self.q_table.loc[state, :]
+			action = np.random.choice(state_action[state_action == np.max(state_action)].index)
+		else:
+			action = np.random.choice(self.actions)
+		return action
 
-    def choose_action(self, observation):
-        self.check_state_exist(observation)
-        # action selection
-        if np.random.uniform() < self.epsilon:
-            # choose best action
-            state_action = self.q_table.loc[observation, :]
-            # some actions may have the same value, randomly choose on in these actions
-            action = np.random.choice(state_action[state_action == np.max(state_action)].index)
-        else:
-            # choose random action
-            action = np.random.choice(self.actions)
-        return action
+	def learning(self, state, action, reward, state_):
+		self.check_state_exist(state_)
+		q_predict = self.q_table.loc[state, action]
+		if state_ != 'terminal':
+			q_target = reward + self.gamma * self.q_table.loc[state_,:].max()
+		else:
+			q_target = reward 
+		self.q_table.loc[state, action] += self.lr * (q_target - q_predict)
+		print(self.q_table)
 
-    def learn(self, s, a, r, s_):
-        self.check_state_exist(s_)
-        q_predict = self.q_table.loc[s, a]
-        if s_ != 'terminal':
-            q_target = r + self.gamma * self.q_table.loc[s_, :].max()  # next state is not terminal
-        else:
-            q_target = r  # next state is terminal
-        self.q_table.loc[s, a] += self.lr * (q_target - q_predict)  # update
+	def check_state_exist(self, state):
+		if state not in self.q_table.index:
+			# append new state to q table
+			self.q_table = self.q_table.append(
+				pd.Series(
+					[0]*len(self.actions),
+					index = self.q_table.columns,
+					name  = state,
+				)
+			)
 
-    def check_state_exist(self, state):
-        if state not in self.q_table.index:
-            # append new state to q table
-            self.q_table = self.q_table.append(
-                pd.Series(
-                    [0]*len(self.actions),
-                    index=self.q_table.columns,
-                    name=state,
-                )
-            )
