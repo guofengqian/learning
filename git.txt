@@ -1,3 +1,13 @@
+git账号：guofengqian
+git密码：82112528qgf
+
+---- 更新本地数据到git服务器上 ----
+1. sudo git push -u origin master
+2. 按提示输入git账号
+3. 按提示输入git密码
+
 ---- 更新git服务器上的数据到本地 -----
 1. git fetch origin master   # 提取远程数据到本地仓库
 2. git merge origin/master   # 合并
+
+
