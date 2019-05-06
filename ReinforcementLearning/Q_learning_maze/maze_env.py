@@ -1,8 +1,40 @@
 '''
-Reinfocement learning maze example.
+				    模拟的可视化迷宫环境
+
+			  (0,0)                  (16.0)
+                 **********************
+                 *red *    *    *     *
+                 *    *    *    *     * 
+                 **********************  
+                 *    *    *bl *      *   
+                 *    *    *   *      *             s_
+action ------->  **********************      -----> reward
+                 *    *bl  *yel*      *             done
+                 *    *    *   *      *
+                 **********************
+                 *    *    *   *      *
+                 *    *    *    *     *
+                 **********************(16,16)
+			  (0,16)      
+			  			
+
+环境输入：
+	action: {0,1,2,3} 对应上下左右四个动作
+环境中的元素：	
+	red:    red rectangle（探索者），action作用于他身上
+	bl:     black rectangle（是个坑）
+	yel:    yellow oval（是出口）
+环境的反馈：
+	s_      red的新位置
+	reward: {-1,0,1} 环境对此次action的评分。对应 red踩到了坑，red没踩到坑，red到达出口 
+	done:   bool value. 表示red探索者已经结束了此次探索（踩到坑或到达出口）
+
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
 
 对象：
-	Maze -> canvas -> hell1     (black rectangle)  [reward = -1]
+tk.TK -> Maze -> canvas -> hell1     (black rectangle)  [reward = -1]
                    -> hell2     (black rectangle)  [reward = -1]
                    -> paradise  (yellow oval)      [reward = +1]
                    -> explorer  (red rectangle)   
@@ -11,7 +43,7 @@ Reinfocement learning maze example.
 	__init__(self):    创建对象
 	reset(self):       让探索者explorer回到原点
 	step(self,action): 让探索者explorer按action指定的方向移动一步
-	render()：         测试用：每过0.1s，往右移动explorer一格
+
 
 This script is the environment part of this example. The RL is in RL_brain.py.
 '''
@@ -24,7 +56,6 @@ if sys.version_info.major == 2: # pythone的版本
 	import Tkinter as tk
 else:
 	import tkinter as tk
-
 
 UNIT   = 40 # pixels
 MAZE_H = 4  # grid height
@@ -144,9 +175,10 @@ class Maze(tk.Tk, object): # 继承tk.Tk类, object类，
 
 		return s_, reward, done
 
+#------------------  以下是测试代码  -------------------
+
 # 让explorer回归原位后，一直往右移动
 def test_moveRight():
-	print('update')
 	for t in range(10):
 		s = env.reset() # 
 		while True:
