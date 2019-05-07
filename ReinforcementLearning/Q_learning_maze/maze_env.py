@@ -134,7 +134,7 @@ class Maze(tk.Tk, object): # 继承tk.Tk类, object类，
 		# return observation
 		return self.canvas.coords(self.explorer)
 
-	# 进行动作action，返回explorer(red rect)的新坐标值 
+	# 进行动作action，返回explorer(red rect)的新坐标值, 以及环境给予的reward，以及是否结束单词迷宫行走 
 	def step(self, action):
 		s = self.canvas.coords(self.explorer)
 		base_action = np.array([0,0])
@@ -147,7 +147,7 @@ class Maze(tk.Tk, object): # 继承tk.Tk类, object类，
 		elif action == 2: # left
 			if s[0] > UNIT:
 				base_action[0] -= UNIT
-		elif action == 3:
+		elif action == 3: # right
 			if s[0] < (MAZE_W - 1) * UNIT:
 				base_action[0] += UNIT
 		

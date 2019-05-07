@@ -1,28 +1,37 @@
 '''
 
-====== Q_Learning强化学习者的大脑 =======
+                    Q_Learning强化学习者的大脑 
 
+                                       *********************
+ state                         ****》  *  大脑 - 决策区    *  ****》  action
+                                       *********************
+决策区：以epsilon的概率选择Qmax( state, action )    *   
+        以(1 - epsilon)的概率选择Q(state, :)        *  
+                                                    ******《 *****
+                                                                  *
+                                                                  *
+************************************************************************
+                  大脑 - 存储区Q_LearningTable                         *
+              action[0]   action[1]   ...  action[j] ...   action[n]   *
+   state_0       Q00          Q01             Q0j            Q0n       *
+   state_1       Q10          Q11             Q1j            Q1n       *
+   ...                                                                 *   《******************
+   state_i       Qi0          Qi1             Qij            Qin       *                      *
+   ...                                                                 *                      *
+   state_m       Qm0          Qm1             Qmj            Qmn       *                      *
+                                                                       *                      *
+************************************************************************                      *
+                                                                                              *
+												                                              *
+                                                                                              *
+												                                              *
+                                       ********************                                   *
+ state, action, reward, state_ ****》  *  大脑 - 学习区   *   ****》  新Q( state, action ) ****
+                                       ********************
+学习区： 新Q( state, action) = 旧Q (state, action) + 
+                                 self.lr * (reward + self.gama * Qmax(state_, :) - 旧Q (state, action)
 
-
-Q_LearningTable:
-           action[0]   action[1]   ...  action[j] ...   action[n]
-state_0       Q00          Q01             Q0j            Q0n
-state_1       Q10          Q11             Q1j            Q1n
-...
-state_i       Qi0          Qi1             Qij            Qin
-...
-state_m       Qm0          Qm1             Qmj            Qmn
-
-在state下选择一个动作action的策略：
-	以epsilon的概率选择Q值最大的action，
-    以（1-epsilon)的概率随机选择Q值
-新的Q值 = 旧Q值 + 
-		  奖励值reward（采取当前action获得的） + 
-		  在状态state_下最大的Q值（采取当前action后到达的新状态下的最大Q值）
-最佳action[j] ： 
-	Q值最大
 '''
-
 
 import pandas as pd
 import numpy  as np
@@ -35,7 +44,7 @@ class Q_LearningTable:
 		self.epsilon = e_greedy
 		self.q_table = pd.DataFrame(columns=actions, dtype=np.float64)
 
-	def choose_action(self,state):
+	def choose_action(self,state):  # 决策区
 		self.check_state_exist(state)	
 		if np.random.uniform() < self.epsilon:
 			state_action = self.q_table.loc[state, :]
@@ -44,7 +53,7 @@ class Q_LearningTable:
 			action = np.random.choice(self.actions)
 		return action
 
-	def learning(self, state, action, reward, state_):
+	def learning(self, state, action, reward, state_):  # 学习区
 		self.check_state_exist(state_)
 		q_predict = self.q_table.loc[state, action]
 		if state_ != 'terminal':
@@ -52,6 +61,7 @@ class Q_LearningTable:
 		else:
 			q_target = reward 
 		self.q_table.loc[state, action] += self.lr * (q_target - q_predict)
+		print('----------Q_table---------')
 		print(self.q_table)
 
 	def check_state_exist(self, state):
