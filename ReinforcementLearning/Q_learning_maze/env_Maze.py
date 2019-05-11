@@ -1,51 +1,5 @@
 '''
-				    模拟的可视化迷宫环境
-
-			  (0,0)                  (16.0)
-                 **********************
-                 *red *    *    *     *
-                 *    *    *    *     * 
-                 **********************  
-                 *    *    *bl *      *   
-                 *    *    *   *      *             s_
-action ------->  **********************      -----> reward
-                 *    *bl  *yel*      *             done
-                 *    *    *   *      *
-                 **********************
-                 *    *    *   *      *
-                 *    *    *    *     *
-                 **********************(16,16)
-			  (0,16)      
-			  			
-
-环境输入：
-	action: {0,1,2,3} 对应上下左右四个动作
-环境中的元素：	
-	red:    red rectangle（探索者），action作用于他身上
-	bl:     black rectangle（是个坑）
-	yel:    yellow oval（是出口）
-环境的反馈：
-	s_      red的新位置
-	reward: {-1,0,1} 环境对此次action的评分。对应 red踩到了坑，red没踩到坑，red到达出口 
-	done:   bool value. 表示red探索者已经结束了此次探索（踩到坑或到达出口）
-
------------------------------------------------------------------------
------------------------------------------------------------------------
------------------------------------------------------------------------
-
-对象：
-tk.TK -> Maze -> canvas -> hell1     (black rectangle)  [reward = -1]
-                   -> hell2     (black rectangle)  [reward = -1]
-                   -> paradise  (yellow oval)      [reward = +1]
-                   -> explorer  (red rectangle)   
-                   -> all other status  (bakcground rectangle) [reward = 0] 
-方法：
-	__init__(self):    创建对象
-	reset(self):       让探索者explorer回到原点
-	step(self,action): 让探索者explorer按action指定的方向移动一步
-
-
-This script is the environment part of this example. The RL is in RL_brain.py.
+         可视化迷宫环境
 '''
 
 import numpy as np
@@ -57,35 +11,37 @@ if sys.version_info.major == 2: # pythone的版本
 else:
 	import tkinter as tk
 
-UNIT   = 40 # pixels
-MAZE_H = 4  # grid height
-MAZE_W = 4  # grid width
+UNIT   = 40 # 迷宫 - 格子边长包含的像素个数
+MAZE_H = 4  # 迷宫 - 纵向的格子的个数
+MAZE_W = 4  # 迷宫 - 横向的格子的个数
 
 class Maze(tk.Tk, object): # 继承tk.Tk类, object类，
 						   # 在python3中object类是自动继承
+	# 在创建迷宫这个对象时会被自动调用
 	def __init__(self):
 		super(Maze, self).__init__() # super会自动递归查找第一个参数指定的类的父类
 									 # self是一个要调用__init__方法的实例
 		self.action_space = ['u','d','l','r']   # action
 		self.n_actions = len(self.action_space) # action的个数
-		self.title('maze')					  # 标题
+		self.title('maze')                      # 标题
 		# {0}：对应数字MAZE_H * UNIT
 		# {1}: 对应数字MAZE_H * UNIT
 		# '{0}x{1}' 对应字符串 160x160
 		self.geometry('{0}x{1}'.format(MAZE_H * UNIT, MAZE_W * UNIT))
 		self._build_maze()   # 把迷宫画出来
 
+	# 画出迷宫
 	def _build_maze(self):
 		self.canvas = tk.Canvas(self,bg='white',
 								height = MAZE_H * UNIT,
 								width  = MAZE_W * UNIT)
 		# create grids
-		for colu in range(0, MAZE_W * UNIT, UNIT):  # colu: 0,1,2,3,..., MZE_W*UNIT - 1
+		for colu in range(0, MAZE_W * UNIT, UNIT):  # colu: 0,1,2,3,..., MAZE_W*UNIT - 1
 			x0,y0,x1,y1 = colu, 0, colu, MAZE_H * UNIT
-			self.canvas.create_line(x0,y0,x1,y1)  # 竖线
+			self.canvas.create_line(x0,y0,x1,y1)  # 画竖线
 		for row  in range(0, MAZE_H * UNIT, UNIT):
 			x0,y0,x1,y1 = 0, row, MAZE_W * UNIT, row
-			self.canvas.create_line(x0,y0,x1,y1)  # 横线
+			self.canvas.create_line(x0,y0,x1,y1)  # 画横线
 
 		# create origin
 		origin = np.array([20,20]) # origin: 一个一维数组[20,20]
@@ -120,8 +76,9 @@ class Maze(tk.Tk, object): # 继承tk.Tk类, object类，
 		# pack all
 		self.canvas.pack()
 
-	# explorer（red rect）销毁后，重新创建回到原点处
-	def reset(self):
+	# 让迷宫中的探索者explorer回到起点,并给出环境的反馈（位置坐标）
+    # 反馈有两种表现形式，一种是给人看的（图形），一种是给机器的（返回值）
+	def explorer_reset(self):
 		time.sleep(0.5)
 		self.canvas.delete(self.explorer)
 		origin = np.array([20,20])
@@ -134,8 +91,9 @@ class Maze(tk.Tk, object): # 继承tk.Tk类, object类，
 		# return observation
 		return self.canvas.coords(self.explorer)
 
-	# 进行动作action，返回explorer(red rect)的新坐标值, 以及环境给予的reward，以及是否结束单词迷宫行走 
-	def step(self, action):
+	# 让迷宫中的探索者按动作action移动，并给出环境的反馈（位置坐标, 奖励reward,  是否已到达终点）
+    # 反馈有两种表现形式，一种是给人看的（图形），一种是给机器的（返回值）
+	def explorer_step(self, action):
 		s = self.canvas.coords(self.explorer)
 		base_action = np.array([0,0])
 		if action == 0: # up
@@ -174,7 +132,7 @@ class Maze(tk.Tk, object): # 继承tk.Tk类, object类，
 		self.update()
 
 		return s_, reward, done
-
+	
 #------------------  以下是测试代码  -------------------
 
 # 让explorer回归原位后，一直往右移动
