@@ -1,9 +1,16 @@
-                              机器人利用Q_Learning算法在模拟环境里学习走迷宫
-===============
-![](Q_learning.jpeg)
-ldkfjsldflsdkjfkkjiaobiato
-![](env_Maze.png)
------------------------
-dfsdf
+使用Q_Learning算法让机器人走迷宫
+=== 
+  <br />
+  
+##流程图
+---
+![](flowChart.jpeg  )
+***
+***
 
-dfsdfdfsdlfkjsdlkfjlskdjfldfsjlkfjsddlkjfsd 
+  <br />
+  
+##流程图 - 模拟环境
+-----
+![](maze.png  )
+---
