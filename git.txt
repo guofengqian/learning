@@ -1,6 +1,14 @@
 git账号：guofengqian
 git密码：82112528qgf
 
+--- 使用https协议的情况下，git push不需要输入密码 ---
+1. cd ~
+2. vi .git-credentials
+3. 添加内容 https://{username}:{password}@github.com
+   真正输入的时候，是没有大括号的
+4. git config --global credential.helper store
+
+
 ---- 更新本地数据到git服务器上 ----
 1. sudo git push -u origin master
 2. 按提示输入git账号
