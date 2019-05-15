@@ -12,7 +12,7 @@
   
 ##模拟环境
 -----
-![](maze.png)
+![](https://github.com/guofengqian/learning/edit/master/ReinforcementLearning/Q_learning_maze/pictures/maze.png)
 ---
 ***
 ***
