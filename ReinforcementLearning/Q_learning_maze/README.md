@@ -4,7 +4,7 @@
   
 ##流程图
 ---
-![](flowChart.png)
+![](pictures/flowChart.png)
 ***
 ***
 
@@ -12,7 +12,7 @@
   
 ##模拟环境
 -----
-![](https://github.com/guofengqian/learning/edit/master/ReinforcementLearning/Q_learning_maze/pictures/maze.png)
+![](https://github.com/guofengqian/learning/blob/master/ReinforcementLearning/Q_learning_maze/pictures/maze.png)
 ---
 ***
 ***
