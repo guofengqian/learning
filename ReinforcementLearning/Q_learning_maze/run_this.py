@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 '''
+运行环境：python3
+
                        让机器学习走迷宫
 1. 创建有一个探索者的模拟环境env，和使用Q_Learning算法的大脑brain.
 2. 循环：
@@ -48,10 +50,13 @@ def learn():
 	print('game over')
 	env.destroy()
 
+LEARNING_RATE=0.6
+REWARD_DECAY =0.9
+E_GREEDY     =0.9
 if __name__ == '__main__':
 	# 1. 创建模拟的可视化环境env和一颗Q_Learning强化学习大脑brain
 	env   = Maze() 
-	brain = Q_LearningTable(list(range(env.n_actions)), learning_rate=0.6, reward_decay=0.9, e_greedy=0.9)
+	brain = Q_LearningTable(list(range(env.n_actions)), LEARNING_RATE, REWARD_DECAY, E_GREEDY)
 
 	# 2. brain从env给的数字反馈中进行学习，我从env给的可视化图形反馈中观看学习过程。
 	learn()	
