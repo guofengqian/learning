@@ -33,12 +33,12 @@ class Q_LearningTable:
 	def learning(self, s, a, reward, s_):  # 学习区
 
 		self.check_s_exist(s_)
-		q_predict = self.q_table.loc[s, a] # 估计
+		q_predict = self.q_table.loc[s, a] # 旧估计Q(s,a)
 		if s_ != 'terminal':
 			q_target = reward + self.gamma * self.q_table.loc[s_,:].max() # 现实
 		else:
 			q_target = reward 
-		self.q_table.loc[s, a] = self.lr * q_target + (1-self.lr) * q_predict # 新Q(s,a)
+		self.q_table.loc[s, a] = q_predict + self.lr * (q_target - q_predict) # 新估计Q(s,a)
 
 	def check_s_exist(self, s):
 		if s not in self.q_table.index:
