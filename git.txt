@@ -1,6 +1,7 @@
 git账号：guofengqian
 git密码：82112528qgf
 
+--- 更新本地数据到git服务器上 ---
 1. 在网站服务器上新建一个仓库Repositories：   https://github.com/guofengqian/git-demo.git
 2.1 本地不存在仓库时
     git init  // 新建一个repository
