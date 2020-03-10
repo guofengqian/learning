@@ -1,6 +1,16 @@
 # -*- coding: utf-8 -*-
 '''
-               Q_Learning强化学习者的大脑 
+        Temporal-Difference Learning: Q-Learning
+Q(St, At)  <-- Q(St, At) + α[Rt+1 + γ*maxQ(St+1, α) - Q(St,At)]
+α：learning_rate
+γ：
+
+学习到的是一个optimal action-value 函数
+
+一张二维表Q
+    行号：所处的状态 - state
+    列号：选择的行为 - action
+    Q值 ：state下action的质量
 '''
 
 import pandas as pd
@@ -8,7 +18,7 @@ import numpy  as np
 
 class Q_LearningTable:
 	def __init__(self, actions, learning_rate=0.6, reward_decay=0.9, e_greedy=0.9):
-		self.actions = actions   	 # Q表的列号
+		self.actions = actions       # Q表的列号
 		self.lr      = learning_rate # 对现实与估计值之间差距的学习率
 		self.gamma   = reward_decay  # 对过去得到过的奖励的衰减率
 		self.epsilon = e_greedy      # 选取Q值最大的动作的概率
@@ -30,6 +40,9 @@ class Q_LearningTable:
     # 新Q(s,a) = 估计 + self.lr * (现实 - 估计) = self.lr * 现实 + (1-self.lr) * 估计
     # 现实 = reward + self.gama * Qmax(s_,:)
     # 估计 = 旧Q(s,a)
+    # s:      当前状态
+    # a:      当前状态下选择的行为
+    # reward: 当前状态下选择的行为的价值
 	def learning(self, s, a, reward, s_):  # 学习区
 
 		self.check_s_exist(s_)
@@ -51,3 +64,6 @@ class Q_LearningTable:
 				)
 			)
 
+
+if __name__ == '__main__':
+   Qtable = Q_LearningTable() 
