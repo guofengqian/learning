@@ -17,10 +17,10 @@ GRID_X_NUM       = 4  # 迷宫中X轴方向的格子GRID数量
 GRID_Y_NUM       = 4  # 迷宫中Y轴方向的格子GRID数量
 
 # 迷宫中各元素的坐标值 X0, Y0, X1, Y1
-EXPLORER_INIT_COORDS  = [0,                    0,                  GRID_SIDE_LENGTH,   GRID_SIDE_LENGTH] # 探索者 
-TRAP_1_COORDS         = [  GRID_SIDE_LENGTH,   GRID_SIDE_LENGTH, 2*GRID_SIDE_LENGTH, 2*GRID_SIDE_LENGTH] # 陷阱1 
-TRAP_2_COORDS         = [2*GRID_SIDE_LENGTH, 2*GRID_SIDE_LENGTH, 3*GRID_SIDE_LENGTH, 3*GRID_SIDE_LENGTH] # 陷阱2
-EXIT_COORDS           = [2*GRID_SIDE_LENGTH,   GRID_SIDE_LENGTH, 3*GRID_SIDE_LENGTH, 2*GRID_SIDE_LENGTH] # 出口
+START_COORDS  = [0,                    0,                  GRID_SIDE_LENGTH,   GRID_SIDE_LENGTH] # 起点的坐标（左上角和右下角）
+TRAP_1_COORDS = [  GRID_SIDE_LENGTH,   GRID_SIDE_LENGTH, 2*GRID_SIDE_LENGTH, 2*GRID_SIDE_LENGTH] # 陷阱1 ~
+TRAP_2_COORDS = [2*GRID_SIDE_LENGTH, 2*GRID_SIDE_LENGTH, 3*GRID_SIDE_LENGTH, 3*GRID_SIDE_LENGTH] # 陷阱2~
+EXIT_COORDS   = [2*GRID_SIDE_LENGTH,   GRID_SIDE_LENGTH, 3*GRID_SIDE_LENGTH, 2*GRID_SIDE_LENGTH] # 出口~
 
 # 迷宫中可采取的行为
 ACTION_NORTH    = 'north' # 向北走
@@ -58,8 +58,8 @@ class Maze(tk.Tk, object): # 继承tk.Tk类, object类，
 			self.canvas.create_line(x0,y0,x1,y1)  # 画横线
 
 		# 在canvas上画出一个红色矩形，表示探索者
-		self.explorer = self.canvas.create_rectangle( EXPLORER_INIT_COORDS[0], EXPLORER_INIT_COORDS[1], # 左上角的坐标X0,Y0
-													  EXPLORER_INIT_COORDS[2], EXPLORER_INIT_COORDS[3], # 右下角的坐标X1,Y1
+		self.explorer = self.canvas.create_rectangle( START_COORDS[0], START_COORDS[1], # 左上角的坐标X0,Y0
+													  START_COORDS[2], START_COORDS[3], # 右下角的坐标X1,Y1
 				                                      fill = 'red')
 
 		# 在canvas上画出一个黑色矩形，表示陷阱1区 
@@ -84,8 +84,8 @@ class Maze(tk.Tk, object): # 继承tk.Tk类, object类，
 	def explorer_reset(self):
 		time.sleep(0.5)
 		self.canvas.delete(self.explorer)
-		self.explorer = self.canvas.create_rectangle( EXPLORER_INIT_COORDS[0], EXPLORER_INIT_COORDS[1], # 左上角的坐标X0,Y0
-													  EXPLORER_INIT_COORDS[2], EXPLORER_INIT_COORDS[3], # 右下角的坐标X1,Y1
+		self.explorer = self.canvas.create_rectangle( START_COORDS[0], START_COORDS[1], # 起点左上角的坐标X0,Y0
+													  START_COORDS[2], START_COORDS[3], # 起点右下角的坐标X1,Y1
 				                                      fill = 'red')
 		self.update()
 		# return observation
